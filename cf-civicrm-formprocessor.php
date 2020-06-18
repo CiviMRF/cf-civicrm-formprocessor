@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: CF CiviCRM Form Procesor
+ * Plugin Name: Caldera Forms integration with CiviCRM Form Procesor
  * Description: CiviCRMs Form Processor integration for Caldera Forms.
  * Version: 1.0.0
  * Author: Jaap Jansma

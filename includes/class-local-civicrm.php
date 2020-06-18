@@ -39,7 +39,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_LocalCiviCRM {
    * @return array
    */
   public static function loadProfile($profiles) {
-    if (function_exists('civi_wp')) {
+    if (function_exists('civi_wp') && !function_exists('wpcmrf_get_core')) {
       $profiles['_local_civi_'] = [
         'title' => __('Local CiviCRM'),
         'function' => ['CiviCRM_Caldera_Forms_FormProcessor_LocalCiviCRM', 'api']

@@ -61,10 +61,16 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
         }
       }
       $defaultValues = cf_civicrm_formprocessor_api_wrapper($this->profile_name,'FormProcessorDefaults', $this->form_processor_name, $defaultParams, [], true);
-      foreach($form['fields'] as $key => $field) {
-        $slug = $field['slug'];
-        if (isset($defaultValues[$slug])) {
-          $form['fields'][$key]['config']['default'] = $defaultValues[$slug];
+      foreach($defaultValues as $key => $value) {
+        $fieldName = 'form_data_'.$key;
+        $slug = str_replace( '%', '', $processor['config'][$fieldName]);
+        $field = Caldera_Forms_Field_Util::get_field_by_slug($slug, $form);
+        if (is_array($field) && isset($field['ID'])) {
+          $fieldId = $field['ID'];
+          if (isset($form['fields'][$fieldId]['config'])) {
+            echo "set value";
+            $form['fields'][$fieldId]['config']['default'] = $value;
+          }
         }
       }
     }
