@@ -45,6 +45,8 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
     if ($processor['type'] != $this->slug) {
       return $form;
     }
+    $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
+
     if (isset($processor['config']['enable_default']) && $processor['config']['enable_default'] == 'on') {
       // Load default data;
       $config = [];
@@ -67,13 +69,29 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
         $field = Caldera_Forms_Field_Util::get_field_by_slug($slug, $form);
         if (is_array($field) && isset($field['ID'])) {
           $fieldId = $field['ID'];
-          if (isset($form['fields'][$fieldId]['config'])) {
-            echo "set value";
+          if (!empty($field['config']['auto_type']) && isset($loader->options[$field['config']['auto_type']])) {
+            foreach($loader->options[$field['config']['auto_type']] as $optionIdx => $option) {
+              if ($option['value'] == $value) {
+                $form['fields'][$fieldId]['config']['default'] = $optionIdx;
+              }
+            }
+          } elseif(isset($field['config']['option'])) {
+            $options = Caldera_Forms_Field_Util::find_option_values($form['fields'][$fieldId]);
+            if (is_array($value)) {
+              $form['fields'][$fieldId]['config']['default'] = [];
+              foreach($value as $v) {
+                $form['fields'][$fieldId]['config']['default'][] = array_search($v, $options);
+              }
+            } else {
+              $form['fields'][$fieldId]['config']['default'] = array_search($value, $options);
+            }
+          } elseif (isset($form['fields'][$fieldId]['config'])) {
             $form['fields'][$fieldId]['config']['default'] = $value;
           }
         }
       }
     }
+
     return $form;
   }
 

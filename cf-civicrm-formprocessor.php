@@ -117,6 +117,7 @@ function cf_civicrm_formprocessor_get_form($form) {
     return $form;
   }
   require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formprocessor-loader.php';
+
   $processors = $form['processors'];
   foreach($processors as $processor) {
     if (strpos($processor['type'], CiviCRM_Caldera_Forms_FormProcessor_Loader::SLUG_PREFIX) === 0) {
