@@ -128,30 +128,9 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
         'required' => !empty($field['api.required']),
       ];
     }
-    $enableDefaultField = [
-      'id' => 'enable_default',
-      'label' => __('Enable default retrieval'),
-      'type' => 'checkbox',
-      'magic' => false,
-    ];
-    $formHtml = Caldera_Forms_Processor_UI::config_fields($fields);
-    $defaultHtml = Caldera_Forms_Processor_UI::config_fields($defaultFields);
-    $enableDefaultFieldHtml = Caldera_Forms_Processor_UI::config_field($enableDefaultField);
-    $script = "<script>
-        jQuery(document).ready( 
-            function(\$) { 
-              $('#enable_default').on('change', function() {
-                console.log('hoi');
-                if ($(this).prop('checked') == true){ 
-                  $('.formprocessor_default_data').show(); 
-                } else {
-                 $('.formprocessor_default_data').hide();
-                }
-              });
-              $('#enable_default').trigger('change');
-            });
-            </script>";
-    $config['html'] = $formHtml . '<h2>'. __( 'Retrieve defaults', 'cf-civicrm-formprocessor' ).'</h2>'.$enableDefaultFieldHtml.'<div class="formprocessor_default_data">'.$defaultHtml.'</div>'.$script;
+    $config['form_data_fields'] = $fields;
+    $config['default_data_fields'] = $defaultFields;
+    $config['template'] = CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'/templates/processor.php';
     $allFields = array_merge($fields, $defaultFields);
 
     require_once(CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH . 'processors/formprocessor/class-formprocessor-processor.php');
