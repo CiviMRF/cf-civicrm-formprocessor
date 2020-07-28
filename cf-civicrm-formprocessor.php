@@ -132,12 +132,14 @@ function cf_civicrm_formprocessor_get_form($form) {
 }
 
 function cf_civicrm_formprocessor_options_presets($presets) {
+  require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formprocessor-loader.php';
   $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
   $presets = array_merge($presets, $loader->presets);
   return $presets;
 }
 
 function cf_civicrm_formprocessor_fields_types() {
+  require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formprocessor-loader.php';
   $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
   foreach($loader->presets as $presetName => $preset) {
     echo "<option value=\"{$presetName}\"{{#is auto_type value=\"{$presetName}\"}} selected=\"selected\"{{/is}}>{$preset['name']}</option>";
@@ -146,6 +148,7 @@ function cf_civicrm_formprocessor_fields_types() {
 
 function cf_civicrm_formprocessor_fields_values($field, $form) {
   if (!empty( $field['config']['auto'])) {
+    require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formprocessor-loader.php';
     $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
     foreach($loader->options as $presetName => $options) {
       if ($field['config']['auto_type'] == $presetName) {
