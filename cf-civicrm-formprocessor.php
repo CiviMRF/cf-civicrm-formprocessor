@@ -164,3 +164,13 @@ function cf_civicrm_formprocessor_wpcmrf_api($profile, $entity, $action, $params
   $call = wpcmrf_api($entity, $action, $params, $options, $profile_id);
   return $call->getReply();
 }
+
+/**
+ * Sanitize function which does not do anything.
+ *
+ * @param $value
+ * @return mixed
+ */
+function cf_civicrm_formprocessor_santize($value) {
+  return $value;
+}

@@ -95,13 +95,20 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
     $config['description'] = sprintf(__( 'Submit to CiviCRM Form Processor %1$s', 'cf-civicrm-formprocessor' ), $title);
     $fields = [];
     $fieldsApi = cf_civicrm_formprocessor_api_wrapper($profile, 'FormProcessor', 'getfields', ['api_action' => $name], ['limit' => 0, 'cache' => '180 minutes']);
+    $idx = 0;
     foreach($fieldsApi['values'] as $field) {
-      $fields[] = [
+      $fields[$idx] = [
         'id' => 'form_data_'.$field['name'],
         'label' => $field['title'],
         'type' => 'text',
         'required' => !empty($field['api.required']),
       ];
+      if ($field['type'] == 2 || $field['type'] == 32) {
+        // String = 2
+        // Text = 32
+        // Long Text = 32
+        $fields[$idx]['sanatize'] = 'cf_civicrm_formprocessor_santize';
+      }
       if (isset($field['options']) && is_array($field['options'])) {
         $options = [];
         $data = "";
@@ -117,6 +124,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
         $this->presets[$presetName]['data'] = $data;
         $this->options[$presetName] = $options;
       }
+      $idx++;
     }
     $defaultFieldsApi = cf_civicrm_formprocessor_api_wrapper($profile,'FormProcessorDefaults', 'getfields', ['api_action' => $name], ['limit' => 0, 'cache' => '180 minutes']);
     $defaultFields = [];
