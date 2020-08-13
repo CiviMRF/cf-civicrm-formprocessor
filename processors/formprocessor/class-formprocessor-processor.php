@@ -123,7 +123,14 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
         $params[substr($key, 10)] = $value;
       }
     }
-    cf_civicrm_formprocessor_api_wrapper($this->profile_name,'FormProcessor', $this->form_processor_name, $params, [],false);
+    $result = cf_civicrm_formprocessor_api_wrapper($this->profile_name,'FormProcessor', $this->form_processor_name, $params, [],false);
+    // Remove null values from array otherwise we might get uggly errors.
+    foreach($result as $key => $val) {
+      if ($val === null) {
+        unset($result[$key]);
+      }
+    }
+    return $result;
   }
 
 

@@ -139,6 +139,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
     $config['form_data_fields'] = $fields;
     $config['default_data_fields'] = $defaultFields;
     $config['template'] = CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'/templates/processor.php';
+    $config['magic_tags'] = ['*'];
     $allFields = array_merge($fields, $defaultFields);
 
     require_once(CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH . 'processors/formprocessor/class-formprocessor-processor.php');
