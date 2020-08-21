@@ -116,6 +116,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
   }
 
   public function processor(array $config, array $form, $proccesid) {
+    global $transdata;
     $this->set_data_object_initial($config, $form);
     $params = [];
     foreach($this->data_object->get_values() as $key => $value) {
@@ -124,6 +125,17 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
       }
     }
     $result = cf_civicrm_formprocessor_api_wrapper($this->profile_name,'FormProcessor', $this->form_processor_name, $params, [],false);
+    if (isset($result['is_error']) && $result['is_error']) {
+      cf_civicrm_formprocessor_log('Error from form processor');
+      cf_civicrm_formprocessor_log($result);
+      $transdata['error'] = true;
+      if (!empty($config['error_message'])) {
+        $transdata['note'] = $config['error_message'];
+      } else {
+        $transdata['note'] = __('Something went wrong.', 'cf-civicrm-formprocessor');
+      }
+      return $result;
+    }
     // Remove null values from array otherwise we might get uggly errors.
     foreach($result as $key => $val) {
       if ($val === null) {

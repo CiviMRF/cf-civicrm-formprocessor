@@ -174,3 +174,13 @@ function cf_civicrm_formprocessor_wpcmrf_api($profile, $entity, $action, $params
 function cf_civicrm_formprocessor_santize($value) {
   return $value;
 }
+
+function cf_civicrm_formprocessor_log($message) {
+  if (WP_DEBUG) {
+    if (is_array($message) || is_object($message)) {
+      error_log(print_r($message, true));
+    } else {
+      error_log($message);
+    }
+  }
+}
