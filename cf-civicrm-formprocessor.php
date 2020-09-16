@@ -147,10 +147,12 @@ function cf_civicrm_formprocessor_fields_types() {
 }
 
 function cf_civicrm_formprocessor_fields_values($field, $form) {
-  $form = cf_civicrm_formprocessor_get_form($form);
   if (!empty( $field['config']['auto'])) {
     require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formprocessor-loader.php';
     $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
+    if ($field['config']['auto_type'] && !isset($loader->options[$field['config']['auto_type']])) {
+      $loader->loadOptionsByPresentName($field['config']['auto_type']);
+    }
     if ($field['config']['auto_type'] && isset($loader->options[$field['config']['auto_type']])) {
       $field['config']['option'] = $loader->options[$field['config']['auto_type']];
     }

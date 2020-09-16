@@ -44,6 +44,23 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
     }
   }
 
+  public function loadOptionsByPresentName($presetName) {
+    $profiles = cf_civicrm_formprocessor_get_profiles();
+    foreach($profiles as $profile => $profile_data) {
+      if (stripos($presetName, $profile) === 0) {
+        $result = cf_civicrm_formprocessor_api_wrapper($profile,'FormProcessorInstance', 'list', [], ['cache' => '180 minutes']);
+        if (isset($result['values'] )) {
+          foreach ($result['values'] as $value) {
+            if (stripos($presetName, $profile.'_'.$value['name']) === 0) {
+              $this->loadBySlug(self::SLUG_PREFIX.$profile. '_'.$value['name']);
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
   /**
    * Load a form processor by its slug.
    *
