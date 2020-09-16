@@ -3,6 +3,8 @@
 // All functions are Wordpress-specific.
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formprocessor-loader.php';
+
 /**
  * CiviCRM Caldera Forms Form Processor Processor Class.
  *
@@ -117,13 +119,22 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
 
   public function processor(array $config, array $form, $proccesid) {
     global $transdata;
+    $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
     $this->set_data_object_initial($config, $form);
     $params = [];
-    foreach($this->data_object->get_values() as $key => $value) {
-      if (stripos($key, 'form_data_') === 0) {
-        $params[substr($key, 10)] = $value;
+    $values = $this->data_object->get_values();
+    if (is_array($values)) {
+      foreach ($values as $key => $value) {
+        if (stripos($key, 'form_data_') === 0) {
+          $preset_name = $this->profile_name . '_' . $this->form_processor_name . '_' . substr($key, 10);
+          if (isset($loader->options_meta[$preset_name]) && $loader->options_meta[$preset_name]['multiple']) {
+            $value = explode(", ", $value);
+          }
+          $params[substr($key, 10)] = $value;
+        }
       }
     }
+
     $result = cf_civicrm_formprocessor_api_wrapper($this->profile_name,'FormProcessor', $this->form_processor_name, $params, [],false);
     if (isset($result['is_error']) && $result['is_error']) {
       cf_civicrm_formprocessor_log('Error from form processor');

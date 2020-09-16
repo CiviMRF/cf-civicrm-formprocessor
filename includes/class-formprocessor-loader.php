@@ -25,6 +25,8 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
 
   public $options = [];
 
+  public $options_meta = [];
+
   /**
    * Load all form processors
    *
@@ -122,6 +124,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_Loader {
         $presetName = $profile.'_'.$name.'_'.$field['name'];
         $this->presets[$presetName]['name'] = sprintf(__( '%1$s from %2$s (%3$s)', 'cf-civicrm-formprocessor' ), $field['title'], $title, $profileTitle);
         $this->presets[$presetName]['data'] = $data;
+        $this->options_meta[$presetName]['multiple'] = isset($field['formprocessor.is_multiple']) && $field['formprocessor.is_multiple'] ? TRUE : false;
         $this->options[$presetName] = $options;
       }
       $idx++;
