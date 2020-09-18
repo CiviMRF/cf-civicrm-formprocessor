@@ -72,7 +72,9 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
           $field     = Caldera_Forms_Field_Util::get_field_by_slug($slug, $form);
           if (is_array($field) && isset($field['ID'])) {
             $fieldId = $field['ID'];
-            if (!empty($field['config']['auto_type']) && isset($loader->options[$field['config']['auto_type']])) {
+            if (!empty($field['config']['auto_type']) && isset($loader->options_meta[$field['config']['auto_type']]) && $loader->options_meta[$field['config']['auto_type']]) {
+              $form['fields'][$fieldId]['config']['default'] = $value;
+            } elseif (!empty($field['config']['auto_type']) && isset($loader->options[$field['config']['auto_type']])) {
               foreach ($loader->options[$field['config']['auto_type']] as $optionIdx => $option) {
                 if ($option['value'] == $value) {
                   $form['fields'][$fieldId]['config']['default'] = $optionIdx;
