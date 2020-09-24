@@ -68,32 +68,31 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
       if (is_array($defaultValues)) {
         foreach ($defaultValues as $key => $value) {
           $fieldName = 'form_data_' . $key;
+          $preset_name = $this->profile_name . '_' . $this->form_processor_name . '_' . $key;
           $slug      = str_replace('%', '', $processor['config'][$fieldName]);
           $field     = Caldera_Forms_Field_Util::get_field_by_slug($slug, $form);
           if (is_array($field) && isset($field['ID'])) {
             $fieldId = $field['ID'];
-            if (!empty($field['config']['auto_type']) && isset($loader->options_meta[$field['config']['auto_type']]) && $loader->options_meta[$field['config']['auto_type']]) {
+            if (isset($loader->options_meta[$preset_name]['multiple']) && $loader->options_meta[$preset_name]['multiple']) {
               $form['fields'][$fieldId]['config']['default'] = $value;
-            } elseif (!empty($field['config']['auto_type']) && isset($loader->options[$field['config']['auto_type']])) {
-              foreach ($loader->options[$field['config']['auto_type']] as $optionIdx => $option) {
+            } elseif (isset($loader->options[$preset_name])) {
+              foreach ($loader->options[$preset_name] as $optionIdx => $option) {
                 if ($option['value'] == $value) {
                   $form['fields'][$fieldId]['config']['default'] = $optionIdx;
+                  break;
                 }
               }
-            }
-            elseif (isset($field['config']['option'])) {
+            } elseif (isset($field['config']['option'])) {
               $options = Caldera_Forms_Field_Util::find_option_values($form['fields'][$fieldId]);
               if (is_array($value)) {
                 $form['fields'][$fieldId]['config']['default'] = [];
                 foreach ($value as $v) {
                   $form['fields'][$fieldId]['config']['default'][] = array_search($v, $options);
                 }
-              }
-              else {
+              } else {
                 $form['fields'][$fieldId]['config']['default'] = array_search($value, $options);
               }
-            }
-            elseif (isset($form['fields'][$fieldId]['config'])) {
+            } elseif (isset($form['fields'][$fieldId]['config'])) {
               $form['fields'][$fieldId]['config']['default'] = $value;
             }
           }
