@@ -16,6 +16,8 @@ require_once CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH.'includes/class-formproce
  */
 class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Processor_Processor {
 
+  public static $isProcessingSubmittedData = false;
+
   public $form_processor_name;
 
   public $profile_name;
@@ -33,6 +35,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
   public function __construct(array $processor_config, array $fields, $slug) {
     $this->form_processor_name = $processor_config['form_processor_name'];
     $this->profile_name = $processor_config['profile_name'];
+    $processor_config['post_processor'] = 'post_processor';
     parent::__construct($processor_config, $fields, $slug);
   }
 
@@ -119,11 +122,16 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
   }
 
   public function processor(array $config, array $form, $proccesid) {
+    // Do nothing.
+    return true;
+  }
+
+  public function post_processor(array $config, array $form, $processid) {
     global $transdata;
     $loader = CiviCRM_Caldera_Forms_FormProcessor_Loader::singleton();
     $this->set_data_object_initial($config, $form);
-    $params = [];
-    $values = $this->data_object->get_values();
+    $values = $this->get_submitted_value($config, $form);
+
     if (is_array($values)) {
       foreach ($values as $key => $value) {
         if (stripos($key, 'form_data_') === 0) {
@@ -155,6 +163,115 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
       }
     }
     return $result;
+  }
+
+  /**
+   * Get values from POST data and set in the value property
+   *
+   * @since 1.3.0
+   *
+   * @access protected
+   *
+   * @param $config
+   * @param $form
+   */
+  protected function get_submitted_value( $config, $form ) {
+    self::$isProcessingSubmittedData = true;
+    $message_pattern = __( '%s is required', 'caldera-forms' );
+    $default_args = array(
+      'message' => false,
+      'default' => false,
+      'sanatize' => 'strip_tags',
+      'magic' => true,
+      'required' => true,
+    );
+    $values = array();
+    $fields = $this->fields();
+    foreach( $fields as $field  => $args ) {
+      if ( ( 0 == $field || is_int( $field ) ) ) {
+        if ( is_string( $args ) ) {
+          $key = $field;
+          $fields[ $field ] = $default_args;
+          unset( $fields[ $field ] );
+        }elseif ( 0 == $field || is_int( $field ) && is_array( $args ) &&isset( $args[ 'id' ]) ) {
+          $key = $args[ 'id' ];
+          $fields[ $key  ] = $args;
+          unset( $fields[ $field ] );
+        }else{
+          unset( $fields[ $field ] );
+          continue;
+        }
+      }else{
+        $key = $field;
+      }
+
+      $fields[ $key ] = wp_parse_args( $args, $default_args );
+
+      if ( isset( $config[ $key ] ) ) {
+        $_field = Caldera_Forms_Field_Util::get_field_by_slug( str_replace( '%', '', $config[ $key ] ), $form );
+      } else {
+        $_field = null;
+      }
+
+      if ( is_array( $_field ) ) {
+        $fields[ $key ][ 'config_field' ] = $_field[ 'ID' ];
+      }else{
+        $fields[ $key ][ 'config_field' ] = false;
+      }
+      if ( false === $fields[ $key][ 'message' ] ) {
+        $fields[ $key ][ 'message' ] = sprintf( $message_pattern, $args[ 'label' ] );
+      }
+
+    }
+
+    foreach ( $fields as $field => $args  ) {
+      if ( isset( $config[ $field ]) ) {
+        if ( $args[ 'magic' ] ) {
+          $value = Caldera_Forms::do_magic_tags( $config[ $field ], null, $form );
+        } else {
+          $value = $config[ $field ];
+        }
+
+        $field_id_passed = strpos( $value, 'fld_' );
+        if ( false !== $field_id_passed ) {
+          $value = Caldera_Forms::get_field_data( $value, $form );
+        }
+
+      }else{
+        $value = null;
+      }
+
+      if ( ! empty( $value ) ) {
+        $value = call_user_func( $args['sanatize'], $value );
+      }
+
+      /**
+       * Filter value for field of processor
+       *
+       * @since 1.3.1
+       *
+       * @param mixed $value The value of the field.
+       * @param string $field The name of the field.
+       * @param array $args Config for this field.
+       * @param array $config Processor config.
+       * @param array $form Form config.
+       */
+      $value = apply_filters( 'caldera_forms_processor_value', $value, $field, $args, $config, $form );
+
+      if ( ! empty( $value )  ) {
+        $values[ $field ] = $value;
+
+      }else{
+        if ( $args[ 'required' ] ) {
+          $this->data_object->add_error( $args[ 'message' ] );
+        }else{
+          $values[ $field ] = null;
+        }
+      }
+
+    }
+    self::$isProcessingSubmittedData = false;
+    return $values;
   }
 
 

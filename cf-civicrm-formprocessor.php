@@ -185,3 +185,27 @@ function cf_civicrm_formprocessor_log($message) {
     }
   }
 }
+
+/**
+ * This filter is used to add the uploaded files when processing magic tags.
+ * This is only needed when the form is submitted to civicrm and is needed because
+ * Caldera will only add the files when they are uploaded to the media library.
+ */
+add_filter('caldera_forms_do_field_magic_value', function($value, $matches, $entry_id, $form ) {
+  if (CiviCRM_Caldera_Forms_FormProcessor_Processor::$isProcessingSubmittedData) {
+    foreach ($matches[1] as $key => $tag) {
+      // check for parts
+      $part_tags = explode(':', $tag);
+      if (!empty($part_tags[1])) {
+        $tag = $part_tags[0];
+      }
+      $entry = Caldera_Forms::get_slug_data($tag, $form);
+      $field = Caldera_Forms_Field_Util::get_field_by_slug($tag, $form);
+
+      if (Caldera_Forms_Field_Util::is_file_field($field, $form)) {
+        $value = $entry;
+      }
+    }
+  }
+  return $value;
+}, 20, 4);
