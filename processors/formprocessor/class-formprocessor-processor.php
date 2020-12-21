@@ -137,7 +137,9 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
         if (stripos($key, 'form_data_') === 0) {
           $preset_name = $this->profile_name . '_' . $this->form_processor_name . '_' . substr($key, 10);
           if (isset($loader->options_meta[$preset_name]) && $loader->options_meta[$preset_name]['multiple']) {
-            $value = explode(", ", $value);
+            if ($value !== null) {
+              $value = explode(", ", $value);
+            }
           }
           $params[substr($key, 10)] = $value;
         }
