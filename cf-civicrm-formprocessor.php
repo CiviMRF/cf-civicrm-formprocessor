@@ -192,6 +192,7 @@ function cf_civicrm_formprocessor_log($message) {
  * Caldera will only add the files when they are uploaded to the media library.
  */
 add_filter('caldera_forms_do_field_magic_value', function($value, $matches, $entry_id, $form ) {
+  require_once(CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH . 'processors/formprocessor/class-formprocessor-processor.php');
   if (CiviCRM_Caldera_Forms_FormProcessor_Processor::$isProcessingSubmittedData) {
     foreach ($matches[1] as $key => $tag) {
       // check for parts
