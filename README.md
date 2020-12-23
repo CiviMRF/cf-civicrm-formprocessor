@@ -72,7 +72,10 @@ and this requires that we submit each release to the [Wordpress SVN](https://plu
    1. Go into the Github directory: `cd github`
    1. Checkout the created release (in our example 1.0.0): `git checkout 1.0.0`
    1. Go into the svn directory: `cd ../svn`
-   1. 
+   1. Copie the files from github to SVN: `rsync -rc --exclude-from="../github/.distignore" "../github/" trunk/ --delete --delete-excluded`
+   1. Add the files to SVN: `svn add . --force`
+   1. Tag the release in SVN (in our example 1.0.0): `svn cp "trunk" "tags/1.0.0"`
+   1. Now submit to the Wordpress SVN with a message: `svn ci -m 'Adding 1.0.0'`
 
 
 # License
