@@ -61,6 +61,8 @@ and this requires that we submit each release to the [Wordpress SVN](https://plu
 
 **Workflow for creating a release**
 
+Based on the instruction from [Learn with Daniel](https://learnwithdaniel.com/2019/09/publishing-your-first-wordpress-plugin-with-git-and-svn/)
+
 1. Update `readme.txt` with the new version number
 1. Update `cf-civicrm-formprocessor` with the new version number
 1. Create a new version at [Github](https://github.com/CiviMRF/cf-civicrm-formprocessor/).
