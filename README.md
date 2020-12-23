@@ -56,7 +56,7 @@ and this requires that we submit each release to the [Wordpress SVN](https://plu
 
 1. Fork the repository at Github
 1. Create a new branch for the functionality you want to develop, or for the bug you want to fix.
-1. Write your code and test it once your are finished push it to your fork.
+1. Write your code and test it, once you are finished push it to your fork.
 1. Create a Pull Request at Github to notify us to merge your changes.
 
 **Workflow for creating a release**
@@ -65,7 +65,14 @@ and this requires that we submit each release to the [Wordpress SVN](https://plu
 1. Update `cf-civicrm-formprocessor` with the new version number
 1. Create a new version at [Github](https://github.com/CiviMRF/cf-civicrm-formprocessor/).
 1. To publish the release at Wordpress Plugin directory follow the following steps:
-
+   1. Create a temp directory: `mkdir cf-civicrm-formprocessor-tmp`
+   1. Go into this directory: `cd cf-civicrm-formprocessor-tmp`
+   1. Do an SVN checkout into SVN directory: `svn checkout --depth immediates https://plugins.svn.wordpress.org/cf-civicrm-formprocessor svn`
+   1. Clone the Github repository into Github directory: `git clone https://github.com/CiviMRF/cf-civicrm-formprocessor.git github`
+   1. Go into the Github directory: `cd github`
+   1. Checkout the created release (in our example 1.0.0): `git checkout 1.0.0`
+   1. Go into the svn directory: `cd ../svn`
+   1. 
 
 
 # License
