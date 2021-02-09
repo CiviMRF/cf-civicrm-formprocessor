@@ -1,7 +1,7 @@
 # Integration of CiviCRM's Form Processor with Caldera Forms
 
 This plugin makes it possible to submit caldera forms to [CiviCRM's Form Processor](https://lab.civicrm.org/extensions/form-processor/).
-CiviCRM does not necessarily be installed in the same installation.
+CiviCRM does not necessarily need to be installed in the same installation.
 If it isn't use the [CiviCRM McRestFace Connector plugin(https://github.com/CiviMRF/wpcmrf) to connect to a remote CiviCRM.
 
 **Configuration when CiviCRM is on a remote server**
@@ -27,7 +27,7 @@ Use this when the frontend WordPress site and CiviCRM are in the same wordpress 
 1. Install and activate:
    - [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) - WP plugin
    - [CiviCRM Form Processor](https://lab.civicrm.org/extensions/form-processor/) - CiviCRM extension
-   - [Caldera Forms integration with CiviCRM Form Processor](https://github.com/civimrf/cf-civicrm-formprocessor)  - this WP plugin
+   - [Caldera Forms integration with CiviCRM Form Processor](https://github.com/civimrf/cf-civicrm-formprocessor)  - this is a WP plugin
 1. Create a CiviCRM Form Processor
 1. Create a Caldera Form
 1. On the Processors tab, click `Add Processor`
