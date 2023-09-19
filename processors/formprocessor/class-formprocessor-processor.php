@@ -234,16 +234,18 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
           $value = $config[ $field ];
         }
 
-        $field_id_passed = strpos( $value, 'fld_' );
-        if ( false !== $field_id_passed ) {
-          $value = Caldera_Forms::get_field_data( $value, $form );
+        if (is_string($value)) {
+          $field_id_passed = strpos( $value, 'fld_' );
+            if (FALSE !== $field_id_passed) {
+            $value = Caldera_Forms::get_field_data( $value, $form );
+          }
         }
 
       }else{
         $value = null;
       }
 
-      if ( ! empty( $value ) ) {
+      if (!empty($value) && !is_array($value)) {
         $value = call_user_func( $args['sanatize'], $value );
       }
 
