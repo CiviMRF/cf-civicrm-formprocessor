@@ -156,7 +156,7 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
       } else {
         $transdata['note'] = __('Something went wrong.', 'cf-civicrm-formprocessor');
       }
-      return $result;
+      $this->errorRedirect($form, $processid);
     }
     // Remove null values from array otherwise we might get uggly errors.
     foreach($result as $key => $val) {
@@ -165,6 +165,33 @@ class CiviCRM_Caldera_Forms_FormProcessor_Processor extends Caldera_Forms_Proces
       }
     }
     return $result;
+  }
+
+  protected function errorRedirect($form, $process_id) {
+    global $transdata;
+    global $referrer;
+    // set error transient
+    $transdata = apply_filters('caldera_forms_submit_error_transient', $transdata, $form, $referrer,
+      $process_id);
+    $transdata = apply_filters('caldera_forms_submit_error_transient_pre_process', $transdata, $form,
+      $referrer, $process_id);
+
+    // back to form
+    $query_str = array(
+      'cf_er' => $process_id
+    );
+    if (!empty($referrer['query'])) {
+      $query_str = array_merge($referrer['query'], $query_str);
+    }
+    $referrer = $referrer['path'] . '?' . http_build_query($query_str);
+    $referrer = apply_filters('caldera_forms_submit_error_redirect', $referrer, $form, $process_id);
+    $referrer = apply_filters('caldera_forms_submit_error_redirect_pre_process', $referrer, $form,
+      $process_id);
+
+    // set transient data
+    Caldera_Forms_Transient::set_transient($process_id, $transdata, $transdata['expire']);
+
+    return Caldera_Forms::form_redirect('error', $referrer, $form, $process_id);
   }
 
   /**

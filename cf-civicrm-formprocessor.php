@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Integration of CiviCRM's Form Processor with Caldera Forms
  * Description: This plugin integrates Caldera Forms with CiviCRM's form processor. Funded by CiviCooP, Civiservice.de, Bundesverband Soziokultur e.V., Article 19
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Jaap Jansma
  * Plugin URI: https://github.com/civimrf/cf-civicrm-formprocessor
  * GitHub Plugin URI: civimrf/cf-civicrm-formprocessor
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
  *
  * @since 0.1
  */
-define( 'CF_CIVICRM_FORMPROCESSOR_INTEGRATION_VER', '1.0.0' );
+define( 'CF_CIVICRM_FORMPROCESSOR_INTEGRATION_VER', '1.0.2' );
 define( 'CF_CIVICRM_FORMPROCESSOR_INTEGRATION_URL', plugin_dir_url( __FILE__ ) );
 define( 'CF_CIVICRM_FORMPROCESSOR_INTEGRATION_PATH', plugin_dir_path( __FILE__ ) );
 
