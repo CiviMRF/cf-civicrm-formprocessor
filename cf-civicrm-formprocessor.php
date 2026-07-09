@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Integration of CiviCRM's Form Processor with Caldera Forms
  * Description: This plugin integrates Caldera Forms with CiviCRM's form processor. Funded by CiviCooP, Civiservice.de, Bundesverband Soziokultur e.V., Article 19
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Jaap Jansma
  * Plugin URI: https://github.com/civimrf/cf-civicrm-formprocessor
  * GitHub Plugin URI: civimrf/cf-civicrm-formprocessor
