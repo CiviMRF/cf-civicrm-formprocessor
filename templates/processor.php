@@ -1,8 +1,8 @@
 <?php echo Caldera_Forms_Processor_UI::config_fields($config['form_data_fields']); ?>
 
-<h2><?php echo esc_html_e( 'Retrieve defaults', 'cf-civicrm-formprocessor' ); ?></h2>
+<h2><?php esc_html_e( 'Retrieve defaults', 'cf-civicrm-formprocessor' ); ?></h2>
 <p class="description">
-  <?php echo esc_html_e('Use the retrieval of defaults for filling a form with existing data.', 'cf-civicrm-formprocessor'); ?>
+  <?php esc_html_e('Use the retrieval of defaults for filling a form with existing data.', 'cf-civicrm-formprocessor'); ?>
 </p>
 <?php echo Caldera_Forms_Processor_UI::config_field([
   'id' => 'enable_default',
@@ -15,9 +15,9 @@
 <?php echo Caldera_Forms_Processor_UI::config_fields($config['default_data_fields']); ?>
 </div>
 
-<h2><?php echo esc_html_e( 'Error message', 'cf-civicrm-formprocessor' ); ?></h2>
+<h2><?php esc_html_e( 'Error message', 'cf-civicrm-formprocessor' ); ?></h2>
 <p class="description">
-  <?php echo esc_html_e('When something goes wrong with this processor show this error message to the user. Leave empty to show a default message.', 'cf-civicrm-formprocessor'); ?>
+  <?php esc_html_e('When something goes wrong with this processor show this error message to the user. Leave empty to show a default message.', 'cf-civicrm-formprocessor'); ?>
 </p>
 <?php echo Caldera_Forms_Processor_UI::config_field([
   'id' => 'error_message',
